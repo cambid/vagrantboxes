@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: True
+  vars:
+    - hs_distribution_version: 2016.2.0.725.0
+    - hs_cache_usr: cacheusr
+    - hs_cache_usr_sys: root
+    - hs_cache_group: cacheusr
+  tasks:
+  roles:
+    - { role: ansible-role-cleanup-sles, when: ansible_os_family == 'Suse'  }
+    - ansible-role-ntp
+    - ansible-role-cache

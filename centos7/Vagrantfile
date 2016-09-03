@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.provider 'virtualbox' do |v|
+      v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
+  end
+
+  # create mappings for the cache ports
+  config.vm.network "forwarded_port", guest: 1972, host: 1972
+  config.vm.network "forwarded_port", guest: 8972, host: 8972
+
+  # disable vbox addons update
+  config.vbguest.auto_update = false
+
+  # disable sync of local dir to /home/vagrant/sync
+  # config.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.sudo = true
+    ansible.playbook = "ansible/playbook.yaml"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+     sudo yum update -y
+     sudo yum clean all
+   SHELL
+end

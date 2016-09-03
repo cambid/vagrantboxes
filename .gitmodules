@@ -1,0 +1,9 @@
+[submodule "ansible/roles/ansible-role-ntp"]
+	path = ansible/roles/ansible-role-ntp
+	url = https://github.com/ericsysmin/ansible-role-ntp.git
+[submodule "ansible/roles/ansible-role-cache"]
+	path = ansible/roles/ansible-role-cache
+	url = https://github.com/cambid/ansible-role-cache
+[submodule "ansible/roles/ansible-role-cleanup-sles"]
+	path = ansible/roles/ansible-role-cleanup-sles
+	url = https://github.com/cambid/ansible-role-cleanup-sles.git
