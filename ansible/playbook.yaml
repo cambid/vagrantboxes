@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: True
   vars:
-    - hs_distribution_version: 2016.2.0.736.0
+    - hs_distribution_version: 2016.2.1.803.0
     - hs_cache_usr: cacheusr
     - hs_cache_usr_sys: root
     - hs_cache_group: cacheusr
