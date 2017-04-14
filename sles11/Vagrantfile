@@ -33,4 +33,6 @@ Vagrant.configure(2) do |config|
      sudo zypper clean
   SHELL
 
+  config.vm.provision :reload
+
 end
