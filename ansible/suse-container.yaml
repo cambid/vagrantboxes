@@ -1,0 +1,37 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: "include suse.yaml for key and mail"
+      include_vars: suse.yaml
+
+    - name: "add suse registration and container module"
+      command: "{{ item }}"
+      with_items:
+        - "SUSEConnect -r {{ suse_key }} -e {{ suse_mail }}"
+        - "SUSEConnect -p sle-module-containers/12/x86_64 -r ''"
+      no_log: True
+
+    - name: "update packages"
+      zypper:
+        name: '*'
+        state: latest
+
+    - name: "install needed packages"
+      zypper:
+        name: "{{ item }}"
+      with_items:
+        - docker
+        - sle2docker
+        - sles11sp4-docker-image
+        - sles12sp2-docker-image
+
+    - name: "enable docker service"
+      service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: "download docker images from sles"
+      shell: for image in $(sle2docker list | grep "^ -" | cut -f 3 -d " "); do sle2docker activate $image; done
