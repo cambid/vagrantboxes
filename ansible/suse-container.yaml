@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
 
     - name: "include suse.yaml for key and mail"
@@ -10,7 +10,7 @@
       command: "{{ item }}"
       with_items:
         - "SUSEConnect -r {{ suse_key }} -e {{ suse_mail }}"
-        - "SUSEConnect -p sle-module-containers/12/x86_64 -r ''"
+        - "SUSEConnect -p sle-module-containers/{{ ansible_distribution_major_version }}/x86_64 -r ''"
       no_log: True
 
     - name: "update packages"
@@ -18,11 +18,17 @@
         name: '*'
         state: latest
 
-    - name: "install needed packages"
+    - name: "install docker"
       zypper:
         name: "{{ item }}"
       with_items:
         - docker
+
+    - name: "install needed packages for SLES <15"
+      when: ansible_distribution_major_version < '15'
+      zypper:
+        name: "{{ item }}"
+      with_items:
         - sle2docker
         - sles11sp4-docker-image
         - sles12sp2-docker-image
@@ -35,3 +41,14 @@
 
     - name: "download docker images from sles"
       shell: for image in $(sle2docker list | grep "^ -" | cut -f 3 -d " "); do sle2docker activate $image; done
+      when: ansible_distribution_major_version < '15'
+
+    - name: "install docker for python2"
+      pip:
+        name: docker-py
+      when: ansible_distribution_major_version >= '15'
+
+    - name: "download docker images from sles"
+      docker_image:
+        name: registry.suse.com/suse/sle15
+      when: ansible_distribution_major_version >= '15'

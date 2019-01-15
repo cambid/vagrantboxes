@@ -10,7 +10,7 @@
       command: "{{ item }}"
       with_items:
         - "SUSEConnect -r {{ suse_key }} -e {{ suse_mail }}"
-        - "SUSEConnect -p sle-module-containers/12/x86_64 -r ''"
+        - "SUSEConnect -p sle-module-containers/{{ ansible_distribution_major_version }}/x86_64 -r ''"
       no_log: True
       when: ansible_distribution_version >= '12.0'
 
