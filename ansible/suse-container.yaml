@@ -20,18 +20,16 @@
 
     - name: "install docker"
       zypper:
-        name: "{{ item }}"
-      with_items:
-        - docker
+        name:
+          - docker
 
     - name: "install needed packages for SLES <15"
       when: ansible_distribution_major_version < '15'
       zypper:
-        name: "{{ item }}"
-      with_items:
-        - sle2docker
-        - sles11sp4-docker-image
-        - sles12sp2-docker-image
+        name:
+          - sle2docker
+          - sles11sp4-docker-image
+          - sles12sp2-docker-image
 
     - name: "enable docker service"
       service:
